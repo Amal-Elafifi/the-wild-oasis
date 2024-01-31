@@ -1,4 +1,7 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import { PAGE_SIZE } from "../utils/constants";
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -7,14 +10,14 @@ const StyledPagination = styled.div`
   justify-content: space-between;
 `;
 
-const P = styled.p`
-  font-size: 1.4rem;
-  margin-left: 0.8rem;
+// const P = styled.p`
+//   font-size: 1.4rem;
+//   margin-left: 0.8rem;
 
-  & span {
-    font-weight: 600;
-  }
-`;
+//   & span {
+//     font-weight: 600;
+//   }
+// `;
 
 const Buttons = styled.div`
   display: flex;
@@ -55,3 +58,49 @@ const PaginationButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+
+function Pagination({count}){
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+  setSearchParams(searchParams);
+  const pagesCount =Math.ceil(count / PAGE_SIZE);  
+  // const status = searchParams.get("status") || "all";
+
+  
+  function handleNextPage(){
+    const nextPage = currentPage === pagesCount? currentPage : currentPage + 1  ;
+    searchParams.set("page", nextPage);
+    setSearchParams(searchParams);
+  }
+  function handlePrevPage(){
+    const previousPage = currentPage === 1? currentPage : currentPage - 1
+    searchParams.set("page", previousPage);
+    setSearchParams(searchParams);
+  }
+  
+  if(pagesCount === 1) {
+    return null;
+  }
+
+  return(
+    <StyledPagination>
+      <p>showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to <span>{currentPage === pagesCount? count: currentPage * PAGE_SIZE} </span> of <span>{count}</span> results</p>
+      
+      <Buttons>
+        <PaginationButton onClick={handlePrevPage} disabled={currentPage === 1}>
+            <HiChevronLeft/>
+              <span>previous</span>
+          </PaginationButton>
+
+          <PaginationButton onClick={handleNextPage} disabled={currentPage === pagesCount}>
+              <span>next</span>
+            <HiChevronRight/>
+          </PaginationButton>
+
+      </Buttons>
+    </StyledPagination>
+  )
+}
+
+export default Pagination;

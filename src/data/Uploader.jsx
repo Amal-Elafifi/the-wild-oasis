@@ -26,7 +26,7 @@ async function deleteCabins() {
 }
 
 async function deleteBookings() {
-  const { error } = await supabase.from("bookings").delete().gt("id", 0);
+  const { error } = await supabase.from("Bookings").delete().gt("id", 0);
   if (error) console.log(error.message);
 }
 
@@ -58,10 +58,10 @@ async function createBookings() {
     const cabin = cabins.at(booking.cabinId - 1);
     const numNights = subtractDates(booking.endDate, booking.startDate);
     const cabinPrice = numNights * (cabin.regularPrice - cabin.discount);
-    const extrasPrice = booking.hasBreakfast
+    const extraPrice = booking.hasBreakfast
       ? numNights * 15 * booking.numGuests
       : 0; // hardcoded breakfast price
-    const totalPrice = cabinPrice + extrasPrice;
+    const totalPrice = cabinPrice + extraPrice;
 
     let status;
     if (
@@ -86,7 +86,7 @@ async function createBookings() {
       ...booking,
       numNights,
       cabinPrice,
-      extrasPrice,
+      extraPrice,
       totalPrice,
       guestId: allGuestIds.at(booking.guestId - 1),
       cabinId: allCabinIds.at(booking.cabinId - 1),
@@ -96,7 +96,7 @@ async function createBookings() {
 
   console.log(finalBookings);
 
-  const { error } = await supabase.from("bookings").insert(finalBookings);
+  const { error } = await supabase.from("Bookings").insert(finalBookings);
   if (error) console.log(error.message);
 }
 
@@ -135,7 +135,7 @@ function Uploader() {
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
-        gap: "8px",
+        gap: "8px", 
       }}
     >
       <h3>SAMPLE DATA</h3>
