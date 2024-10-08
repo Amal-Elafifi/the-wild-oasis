@@ -61,7 +61,7 @@ function CheckinBooking() {
         totalPrice: totalPrice + optionalBreakfastPrice
       })
     }else{
-      checkin(bookingId);
+      checkin({bookingId});
 
     }
   }
